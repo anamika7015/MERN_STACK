@@ -26,3 +26,47 @@ export const getAllUsers = async (req,res) =>{
         res.status(500).json({errorMessage : error.message});
     }
 }
+
+export const getUserById = async (req,res) =>{
+    try {
+        const id = req.params.id;
+        const userExist = await User.findById(id);
+        if(!userExist){
+            return res.status(404).json({message : "user not found"});
+
+        }
+        res.status(200).json(userExist);
+    } catch (error) {
+        res.status(500).json({errorMessage : error.message})
+    }
+}
+
+
+export const update = async(req,res) =>{
+    try {
+        const id = req.params.id;
+        const userExist =  await User.findById(id);
+        if (!userExist) {
+            res.status(404).json({message : "user not found"});
+        }
+        const updateData = await User.findByIdAndUpdate(id, req.body,{
+            new: true,
+        });
+        res.status(200).json(updateData);
+    } catch (error) {
+        res.status(500).json({errorMessage : error.message})
+    }   };
+
+    export const deleteUser = async (req,res)=>{
+        try {
+            const id = req.params.id;
+            const userExist =  await User.findById(id);
+            if (!userExist) {
+                res.status(404).json({message : "user not found"});
+            }
+            const deleteUser = await User.findByIdAndDelete(id);
+            res.status(200).json({message: "user deleted successfully"});
+        } catch (error) {
+            res.status(500).json({errorMessage : error.message})
+        }
+    }
